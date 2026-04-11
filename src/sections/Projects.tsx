@@ -11,27 +11,27 @@ const projects = [
     title: 'Go Green Mobility',
     category: 'Web Application',
     image: ecoracer,
-    description: 'A high-performance analytics dashboard with real-time data visualization and customizable widgets.',
+    description: 'A web app that promotes eco-friendly living by reducing carbon emissions and encouraging people to choose walking over commuting for a healthier planet.',
     tags: ['React', 'Firebase', 'Node.js', 'Tailwind'],
-    github: '#https://github.com/driax69k/Go-Green-Mobility',
+    github: 'https://github.com/driax69k/Go-Green-Mobility',
   },
   {
     id: 2,
     title: 'Python Inventory Management System',
     category: 'Application',
     image: inventory,
-    description: 'A minimalist meditation app designed to help users find their inner peace through guided sessions.',
+    description: 'An application that helps businesses track, manage, and organize their products, stock levels, sales, and transactions efficiently using a user-friendly interface and automated processes.',
     tags: ['Python', 'Tkinter', 'Python Imaging Library'],
-    github: '#https://github.com/driax69k/CCS-1500-PROJECT',
+    github: 'https://github.com/driax69k/CCS-1500-PROJECT',
   },
   {
     id: 3,
     title: 'Calculator',
     category: 'Web Application',
     image: calculator,
-    description: 'A modern e-commerce platform with a focus on speed, accessibility, and a seamless checkout experience.',
+    description: 'A simple and interactive online tool that allows users to perform basic and advanced mathematical calculations quickly and efficiently through a user-friendly interface.',
     tags: ['HTML', 'CSS', 'Javascript'],
-    github: '#https://github.com/driax69k/Adrian-s-Project-Calculator',
+    github: 'https://github.com/driax69k/Adrian-s-Project-Calculator',
   },
 
 ];
@@ -164,7 +164,6 @@ export default function Projects() {
                     {selectedProject.description}
                   </p>
                   <p className="text-white/60 leading-relaxed">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                   </p>
                 </div>
 
@@ -178,7 +177,7 @@ export default function Projects() {
 
                   <h5 className="text-lg font-bold mb-4">Links</h5>
                   <div className="flex flex-col gap-3">
-                    <a href={selectedProject.github} className="flex items-center justify-between px-6 py-3 glass text-white font-bold rounded-xl hover:bg-white/10 transition-all">
+                    <a href={selectedProject.github} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-6 py-3 glass text-white font-bold rounded-xl hover:bg-white/10 transition-all">
                       Source Code <Github size={16} />
                     </a>
                   </div>

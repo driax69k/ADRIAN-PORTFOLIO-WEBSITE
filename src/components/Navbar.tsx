@@ -37,7 +37,7 @@ export default function Navbar() {
           animate={{ opacity: 1, x: 0 }}
           className="text-2xl font-display font-bold tracking-tighter"
         >
-          PORTFOLIO WEBSITE<span className="text-primary">.</span>
+          ADRIAN<span className="text-primary">.</span>
         </motion.a>
 
         {/* Desktop Nav */}
