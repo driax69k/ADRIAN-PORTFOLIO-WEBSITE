@@ -1,9 +1,10 @@
 import { motion } from 'motion/react';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, Loader2 } from 'lucide-react';
 import Apfp from '../assets/Apfp.jpg';
-
+import { useGithubData } from '../hooks/useGithubData';
 
 export default function Hero() {
+  const { monthsExperience, publicReposCount, isLoading } = useGithubData('driax69k');
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
@@ -77,8 +78,12 @@ export default function Hero() {
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             className="absolute -top-10 -right-10 w-32 h-32 glass rounded-2xl flex items-center justify-center rotate-12 z-20"
           >
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary">5</div>
+            <div className="text-center flex flex-col items-center">
+              {isLoading ? (
+                <Loader2 className="w-8 h-8 text-primary animate-spin mb-1" />
+              ) : (
+                <div className="text-3xl font-bold text-primary">{monthsExperience}</div>
+              )}
               <div className="text-[10px] text-white/50 uppercase tracking-widest">Months Exp.</div>
             </div>
           </motion.div>
@@ -91,8 +96,12 @@ export default function Hero() {
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             className="absolute -bottom-10 -left-10 w-40 h-40 glass rounded-full flex items-center justify-center -rotate-12 z-20"
           >
-            <div className="text-center">
-              <div className="text-3xl font-bold text-secondary">3</div>
+            <div className="text-center flex flex-col items-center">
+              {isLoading ? (
+                <Loader2 className="w-8 h-8 text-secondary animate-spin mb-1" />
+              ) : (
+                <div className="text-3xl font-bold text-secondary">{publicReposCount}</div>
+              )}
               <div className="text-[10px] text-white/50 uppercase tracking-widest">Projects</div>
             </div>
           </motion.div>

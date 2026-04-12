@@ -1,46 +1,58 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ExternalLink, Github, X } from 'lucide-react';
+import { ExternalLink, Github, X, Loader2 } from 'lucide-react';
 import ecoracer from '../assets/ecoracer.png';
 import inventory from '../assets/inventory.png';
 import calculator from '../assets/calculator.png';
+import { useGithubData } from '../hooks/useGithubData';
 
-const projects = [
-  {
-    id: 1,
-    title: 'Go Green Mobility',
-    category: 'Web Application',
-    image: ecoracer,
-    description: 'A web app that promotes eco-friendly living by reducing carbon emissions and encouraging people to choose walking over commuting for a healthier planet.',
-    tags: ['React', 'Firebase', 'Node.js', 'Tailwind'],
-    github: 'https://github.com/driax69k/Go-Green-Mobility',
-  },
-  {
-    id: 2,
-    title: 'Python Inventory Management System',
-    category: 'Application',
-    image: inventory,
-    description: 'An application that helps businesses track, manage, and organize their products, stock levels, sales, and transactions efficiently using a user-friendly interface and automated processes.',
-    tags: ['Python', 'Tkinter', 'Python Imaging Library'],
-    github: 'https://github.com/driax69k/CCS-1500-PROJECT',
-  },
-  {
-    id: 3,
-    title: 'Calculator',
-    category: 'Web Application',
-    image: calculator,
-    description: 'A simple and interactive online tool that allows users to perform basic and advanced mathematical calculations quickly and efficiently through a user-friendly interface.',
-    tags: ['HTML', 'CSS', 'Javascript'],
-    github: 'https://github.com/driax69k/Adrian-s-Project-Calculator',
-  },
+// You can add overriding details here for any GitHub repository!
+// Just add its exact name from GitHub as the key.
+const projectOverrides: Record<string, { image: string, category: string }> = {
+  "Go-Green-Mobility": { image: ecoracer, category: "Web Application" },
+  "CCS-1500-PROJECT": { image: inventory, category: "Application" },
+  "Adrian-s-Project-Calculator": { image: calculator, category: "Web Application" },
+  "AC-Login-System": { image: "https://placehold.co/600x400/111827/06b6d4?text=AC+Login+System", category: "Web Application" }
+};
 
-];
+const DEFAULT_IMAGE = "https://placehold.co/600x400/111827/444?text=No+Image+Yet";
+
+type ProjectItem = {
+  id: number;
+  title: string;
+  category: string;
+  image: string;
+  description: string;
+  tags: string[];
+  github: string;
+};
 
 export default function Projects() {
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+  const [activeFilter, setActiveFilter] = useState('All');
+  const { repos, isLoading } = useGithubData('driax69k');
+
+  const dynamicProjects: ProjectItem[] = useMemo(() => {
+    return repos.map(repo => {
+      const override = projectOverrides[repo.name];
+      return {
+        id: repo.id,
+        title: repo.name.replace(/-/g, ' '),
+        category: override?.category || 'Project',
+        image: override?.image || DEFAULT_IMAGE,
+        description: repo.description || 'No description provided.',
+        tags: repo.topics && repo.topics.length > 0 ? repo.topics : [repo.language || 'Code'],
+        github: repo.html_url
+      };
+    });
+  }, [repos]);
+
+  const filteredProjects = dynamicProjects.filter(p =>
+    activeFilter === 'All' ? true : p.category.includes(activeFilter) || p.category === activeFilter
+  );
 
   return (
-    <section id="projects" className="py-32">
+    <section id="projects" className="py-32 relative">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
           <div>
@@ -68,54 +80,62 @@ export default function Projects() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="flex gap-4"
+            className="flex flex-wrap gap-4"
           >
-            {['All', 'Web', 'Application'].map((filter) => (
+            {['All', 'Web Application', 'Application', 'Project'].map((filter) => (
               <button
                 key={filter}
-                className="px-6 py-2 rounded-full glass text-sm font-medium hover:bg-primary/20 hover:text-primary transition-all"
+                onClick={() => setActiveFilter(filter)}
+                className={`px-6 py-2 rounded-full glass text-sm font-medium transition-all ${activeFilter === filter ? 'bg-primary/20 text-primary' : 'hover:bg-primary/10 hover:text-white'
+                  }`}
               >
-                {filter}
+                {filter === 'Web Application' ? 'Web' : filter}
               </button>
             ))}
           </motion.div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              onClick={() => setSelectedProject(project)}
-              className="group relative cursor-pointer"
-            >
-              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden glass p-2">
-                <div className="relative h-full w-full rounded-2xl overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="text-center p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                      <p className="text-primary font-mono text-xs uppercase tracking-widest mb-2">{project.category}</p>
-                      <h4 className="text-2xl font-bold mb-4">{project.title}</h4>
-                      <div className="flex flex-wrap justify-center gap-2">
-                        {project.tags.map(tag => (
-                          <span key={tag} className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-medium">{tag}</span>
-                        ))}
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="w-12 h-12 text-primary animate-spin" />
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-8">
+            {filteredProjects.map((project, i) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                onClick={() => setSelectedProject(project)}
+                className="group relative cursor-pointer"
+              >
+                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden glass p-2">
+                  <div className="relative h-full w-full rounded-2xl overflow-hidden">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="text-center p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <p className="text-primary font-mono text-xs uppercase tracking-widest mb-2">{project.category}</p>
+                        <h4 className="text-2xl font-bold mb-4">{project.title}</h4>
+                        <div className="flex flex-wrap justify-center gap-2">
+                          {project.tags.map(tag => (
+                            <span key={tag} className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-medium">{tag}</span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Project Modal */}
@@ -162,8 +182,6 @@ export default function Projects() {
                   <h5 className="text-xl font-bold mb-4">Project Overview</h5>
                   <p className="text-white/60 leading-relaxed mb-6">
                     {selectedProject.description}
-                  </p>
-                  <p className="text-white/60 leading-relaxed">
                   </p>
                 </div>
 
