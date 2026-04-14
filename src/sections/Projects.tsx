@@ -5,6 +5,7 @@ import ecoracer from '../assets/ecoracer.png';
 import inventory from '../assets/inventory.png';
 import calculator from '../assets/calculator.png';
 import { useGithubData } from '../hooks/useGithubData';
+import portfolio from '../assets/portfolio.png';
 
 // You can add overriding details here for any GitHub repository!
 // Just add its exact name from GitHub as the key.
@@ -12,7 +13,8 @@ const projectOverrides: Record<string, { image: string, category: string }> = {
   "Go-Green-Mobility": { image: ecoracer, category: "Web Application" },
   "CCS-1500-PROJECT": { image: inventory, category: "Application" },
   "Adrian-s-Project-Calculator": { image: calculator, category: "Web Application" },
-  "AC-Login-System": { image: "https://placehold.co/600x400/111827/06b6d4?text=AC+Login+System", category: "Web Application" }
+  "AC-Login-System": { image: "https://placehold.co/600x400/111827/06b6d4?text=AC+Login+System", category: "Web Application" },
+  "ADRIAN-PORTFOLIO-WEBSITE": { image: portfolio, category: "Web Application" },
 };
 
 const DEFAULT_IMAGE = "https://placehold.co/600x400/111827/444?text=No+Image+Yet";
